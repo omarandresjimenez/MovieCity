@@ -1,0 +1,28 @@
+<div class="billboard__container">
+  <ng-container *ngIf='movie'>
+  <video [poster]="movie.poster" class="video__container" autoPlay [muted]='true' [loop]='true' [src]="movie.trailerLink"></video>
+  <div class="billboard__container-movie__description">
+    <p class="movie__title">
+      {{movie.title}}
+    </p>
+    <p class="movie__description">
+      {{movie.description}}
+    </p>
+    <div class="movie__controls">
+      <app-play-button [movieId]="movie.id" />
+      <button
+        (click)="handleOpenModal()"
+        class="movie__controls-more__info"
+        >
+
+        <fa-icon [icon]="faInfoIcon"></fa-icon>
+          More Info
+      </button>
+    </div>
+  </div>
+</ng-container>
+</div>
+<div class="billboard__movies">
+  <app-movie-list [title]="'Trending Now'" [movies]="movies" (movieSelected)="onMovieSelected($event)" />
+</div>
+

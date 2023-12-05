@@ -1,0 +1,43 @@
+<div  *ngIf="movie" class='movie__container'
+ (mouseenter)="redirectToWatch()"
+>
+  <img
+    (click)="redirectToWatch()"
+    [src]="movie.poster"
+    alt='Movie'
+    draggable='false'
+    class='movie__img'
+  />
+  <div
+    class='movie__img-effect__container'
+  >
+    <img
+      (click)="redirectToWatch()"
+      [src]="movie.poster"
+      alt='Movie'
+      draggable='false'
+      class='movie__img-effect'
+
+    />
+    <div
+      class='movie__img-effect__overlay'
+    >
+      <div class='movie__description'>
+        <app-play-button [movieId]="movie.id" class='play__button' />
+
+        <app-favorite-button [movieId]="movie.id" />
+        <div
+          (click)="openModal()"
+          class='view-details__icon'
+        >
+        <fa-icon class="icon" [icon]="faIconView" />
+        </div>
+      </div>
+      <p class='movie__title'>
+        {{ movie.title }}
+      </p>
+        <p class='movie__duration'>{{movie.duration}}</p>
+        <p class='movie__genre'>{{movie.genre}}</p>
+    </div>
+  </div>
+</div>

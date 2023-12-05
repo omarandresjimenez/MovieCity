@@ -1,0 +1,45 @@
+.nav__container {
+  width: 100%;
+  position: fixed;
+  z-index: 40;
+
+  & .main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transition: 500ms;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    & .nav__items {
+      display: flex;
+      flex-direction: row;
+      margin-left: 2rem;
+      gap: 1.75rem;
+
+      &__right {
+        margin-left: auto;
+        margin-right: 2rem;
+      }
+
+      & li a {
+        list-style: none;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        font-weight: 300;
+        color: rgb(255 255 255);
+        transition: 300ms;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          color: rgb(142, 228, 188);
+        }
+
+        &.active {
+          color: rgb(223, 240, 232);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

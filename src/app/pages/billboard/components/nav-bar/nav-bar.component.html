@@ -1,0 +1,23 @@
+hello world
+<nav class='nav__container'>
+  <div
+    class='main'
+  >
+    <img src='/assets/images/logo.png' height='80px' width='200px'  alt='Logo' />
+    <ul class='nav__items'>
+      <li *ngFor="let item of navItems">
+        <a
+          [routerLink]="item.url"
+          routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+        >
+          {{ item.title }}
+        </a>
+      </li>
+    </ul>
+
+    <div class='nav__items__right'>
+      <app-search-bar (searchText)="onSearch($event)"></app-search-bar>
+    </div>
+
+  </div>
+</nav>

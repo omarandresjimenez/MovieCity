@@ -1,0 +1,7 @@
+<div class="search__container">
+  <div class="searchbar">
+    <input class="search_input" type="text" name="txtSearch" #txtSearch placeholder="Search..." [autocomplete]="'off'" (keyup)="onKeyUp($event)">
+    <span   (click)="onSearch(txtSearch.value)" class="search_icon"> <fa-icon class="icon" [icon]="faIcon"></fa-icon></span>
+
+  </div>
+</div>

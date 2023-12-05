@@ -1,0 +1,12 @@
+<div class='movie-list__container'>
+  <div>
+    <p class='list__title'>
+      {{title}}
+    </p>
+    <div class='list__cards'>
+      <ng-container *ngFor="let movie of movies">
+        <app-movie [movie]="movie" (movieSelected)="onMovieSelected(movie)"/>
+      </ng-container>
+    </div>
+  </div>
+</div>
