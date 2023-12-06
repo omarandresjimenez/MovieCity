@@ -19,11 +19,9 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'movie/:id',
+    path: 'watch/:movieId',
     loadComponent: () =>
-      import('./pages/billboard/components/movie-card/movie.component').then(
-        (m) => m.MovieCardComponent
-      ),
+      import('./pages/watch/watch.component').then((m) => m.WatchComponent),
   },
   {
     path: '',

@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,11 +11,12 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './play-button.component.scss',
 })
 export class PlayButtonComponent {
+  private router: Router = inject(Router);
   @Input({ required: true })
   movieId!: string;
 
   faPlayIcon = faPlay;
   handleClickPlay() {
-    console.log('Play button clicked');
+    this.router.navigateByUrl(`/watch/${this.movieId}`);
   }
 }

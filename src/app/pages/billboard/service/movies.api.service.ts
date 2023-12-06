@@ -23,6 +23,11 @@ export class MovieApiService {
       .pipe(catchError(this.handleError<Movie[]>('getMovies', [])));
   }
 
+  getFavoriteMovies(): Observable<Movie[]> {
+    const movies = localStorage.getItem('favoriteMovies');
+    return of(movies ? JSON.parse(movies) : []);
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(operation, error);

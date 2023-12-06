@@ -1,0 +1,10 @@
+<div class="watch__container" *ngIf="movie$ | async as movie">
+  <video class="video__container" autoPlay controls src={{movie.trailerLink}}></video>
+  <nav class="watch__container__nav">
+    <fa-icon class="icon" [icon]="faIcon" (click)="goBack()"></fa-icon>
+    <p class="movie__text">
+      <span class="light_text">Watching:</span> {{movie.title}}
+    </p>
+  </nav>
+</div>
+

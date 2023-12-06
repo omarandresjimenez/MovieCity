@@ -1,8 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, filter, map } from 'rxjs';
 
 import { MovieApiService } from './movies.api.service';
 import { Movie } from '../../../models/Movie';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,6 @@ export class MovieCatalogService {
 
   public searchMovies(search: string): void {
     this.service.getMovies().subscribe((res: Movie[]) => {
-      console.log('searchMovies');
       this.movieCatalog.next(
         !search?.trim()
           ? res
@@ -45,6 +45,19 @@ export class MovieCatalogService {
                   .search(search.toLocaleLowerCase()) > -1
             )
       );
+    });
+  }
+
+  public getMovie(movieId: string): Observable<Movie> {
+    return this.service.getMovies().pipe(
+      map((movies) => movies.filter((m) => m.id === movieId)[0]),
+      tap((m) => console.log(m))
+    );
+  }
+
+  public setFavoriteMovies() {
+    this.service.getFavoriteMovies().subscribe((res: Movie[]) => {
+      this.movieCatalog.next(res);
     });
   }
 

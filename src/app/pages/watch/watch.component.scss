@@ -1,0 +1,49 @@
+.watch__container {
+  height: 98vh;;
+  width: 100%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+
+  & .video__container {
+    position: relative;
+    width: 95%;
+    max-height: 90%;
+   }
+
+  &__nav {
+    width: 95%;
+    padding: 1rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    background-color: rgb(0 0 0 / 70%);
+
+     & .icon {
+      font-size: 1.25rem;
+      color: #fff;
+      cursor: pointer;
+      transition: 300ms;
+      &:hover {
+        opacity: 0.8;
+      }
+     }
+
+     & .movie__text {
+      color: #fff;
+      font-size: 1.125rem;
+      line-height: 1.25rem;
+      font-weight: 500;
+
+      & .light-text {
+        font-weight: 300;
+      }
+
+     }
+  }
+}
