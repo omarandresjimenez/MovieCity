@@ -1,9 +1,15 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, filter, map } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  of,
+  map,
+  takeLast,
+} from 'rxjs';
 
 import { MovieApiService } from './movies.api.service';
 import { Movie } from '../../../models/Movie';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,19 +17,16 @@ import { tap } from 'rxjs/operators';
 export class MovieCatalogService {
   private movieCatalog = new BehaviorSubject<Movie[]>([]);
   private randomMovie = new BehaviorSubject<Movie | null>(null);
-  private ratingFilter = new BehaviorSubject<number>(1);
+  private favoriteMovies = new BehaviorSubject<Movie[]>([]);
 
-  // private service: MovieApiService;
-  constructor(private service: MovieApiService) {
-    //this.service = Inject(MovieApiService);
-  }
+  private service: MovieApiService = inject(MovieApiService);
 
   get movieCatalog$() {
     return this.movieCatalog.asObservable();
   }
 
-  get ratingFilter$() {
-    return this.ratingFilter.asObservable();
+  get favorites$() {
+    return this.favoriteMovies.asObservable();
   }
 
   get randomMovie$() {
@@ -31,38 +34,89 @@ export class MovieCatalogService {
   }
 
   public searchMovies(search: string): void {
-    this.service.getMovies().subscribe((res: Movie[]) => {
+    combineLatest([
+      this.service.getFavoriteMovies(),
+      this.service.getMovies(),
+    ]).subscribe(([favorites, res]) => {
+      const movies = !search?.trim()
+        ? res
+        : res.filter(
+            (mov: Movie) =>
+              mov.title.toLocaleLowerCase().search(search.toLocaleLowerCase()) >
+                -1 ||
+              mov.description
+                .toLocaleLowerCase()
+                .search(search.toLocaleLowerCase()) > -1
+          );
       this.movieCatalog.next(
-        !search?.trim()
-          ? res
-          : res.filter(
-              (mov: Movie) =>
-                mov.title
-                  .toLocaleLowerCase()
-                  .search(search.toLocaleLowerCase()) > -1 ||
-                mov.description
-                  .toLocaleLowerCase()
-                  .search(search.toLocaleLowerCase()) > -1
-            )
+        movies.map((mov: Movie) => {
+          return {
+            ...mov,
+            isFavorite: favorites.find((f) => f === mov.id) ? true : false,
+          };
+        })
       );
     });
+  }
+
+  public getFavoriteMovies(): void {
+    // if (this.favoriteMovies.getValue().length === 0) {
+    this.service.getFavoriteMovies().subscribe((res: string[]) => {
+      const movies = this.movieCatalog.getValue();
+      movies.forEach((movie: Movie) => {
+        movie.isFavorite = res.find((m) => m === movie.id) ? true : false;
+      });
+      this.movieCatalog.next(movies);
+      this.setMoviesFromFavorites(res);
+    });
+    // }
+  }
+
+  private setMoviesFromFavorites = (res: string[]) => {
+    combineLatest([this.service.getMovies(), of(res)]).subscribe(
+      ([movies, favorites]) => {
+        this.favoriteMovies.next(
+          movies
+            .filter((m) => favorites.find((f) => f === m.id))
+            .map((m) => ({ ...m, isFavorite: true }))
+        );
+      }
+    );
+  };
+
+  public addMovieToFavorites(movieId: string): void {
+    this.service.addMovieToFavorites(movieId).subscribe((res: string[]) => {
+      this.setMoviesFromFavorites(res);
+      const movies = this.movieCatalog.getValue();
+      movies.forEach((movie: Movie) => {
+        if (movie.id === movieId) {
+          movie.isFavorite = true;
+        }
+      });
+      this.movieCatalog.next(movies);
+    });
+  }
+
+  public removeMovieFromFavorites(movieId: string): void {
+    this.service
+      .removeMovieFromFavorites(movieId)
+      .subscribe((res: string[]) => {
+        this.setMoviesFromFavorites(res);
+        const movies = this.movieCatalog.getValue();
+        movies.forEach((movie: Movie) => {
+          if (movie.id === movieId) {
+            movie.isFavorite = false;
+          }
+        });
+        this.movieCatalog.next(movies);
+      });
   }
 
   public getMovie(movieId: string): Observable<Movie> {
     return this.service.getMovies().pipe(
       map((movies) => movies.filter((m) => m.id === movieId)[0]),
-      tap((m) => console.log(m))
+      takeLast(1)
     );
-  }
-
-  public setFavoriteMovies() {
-    this.service.getFavoriteMovies().subscribe((res: Movie[]) => {
-      this.movieCatalog.next(res);
-    });
-  }
-
-  public setRatingFilter(val: number): void {
-    this.ratingFilter.next(val);
   }
 
   public getRandomMovie() {

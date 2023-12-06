@@ -6,6 +6,7 @@ import { PlayButtonComponent } from '../../../../share/play-button/play-button.c
 import { FavoriteButtonComponent } from '../../../../share/favorite-button/favorite-button.component';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { Movie } from '../../../../models/Movie';
+import { MovieFavorite } from '../../../../models/types';
 
 @Component({
   selector: 'app-movie',
@@ -22,8 +23,9 @@ import { Movie } from '../../../../models/Movie';
 export class MovieCardComponent {
   faIconView = faEye;
 
-  @Input({ required: true }) movie?: Movie;
+  @Input({ required: true }) movie!: Movie;
   @Output() movieSelected = new EventEmitter<Movie>();
+  @Output() setFavorite = new EventEmitter<MovieFavorite>();
 
   openModal(): void {
     console.log('Open modal');
@@ -31,5 +33,9 @@ export class MovieCardComponent {
 
   redirectToWatch(): void {
     this.movieSelected.emit(this.movie);
+  }
+
+  onSetFavorite(event: MovieFavorite): void {
+    this.setFavorite.emit(event);
   }
 }

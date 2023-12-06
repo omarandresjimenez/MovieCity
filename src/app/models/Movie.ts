@@ -8,4 +8,5 @@ export interface Movie {
   releasedDate: string;
   trailerLink: string;
   poster: string;
+  isFavorite?: boolean;
 }

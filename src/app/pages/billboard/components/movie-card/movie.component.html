@@ -1,4 +1,4 @@
-<div  *ngIf="movie" class='movie__container'
+<div *ngIf="movie" class='movie__container'
  (mouseenter)="redirectToWatch()"
 >
   <img
@@ -25,7 +25,7 @@
       <div class='movie__description'>
         <app-play-button [movieId]="movie.id" class='play__button' />
 
-        <app-favorite-button [movieId]="movie.id" />
+        <app-favorite-button [movie]="movie" (setFavorite)="onSetFavorite($event)"/>
         <div
           (click)="openModal()"
           class='view-details__icon'

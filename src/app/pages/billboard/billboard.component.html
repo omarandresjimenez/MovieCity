@@ -23,6 +23,7 @@
 </ng-container>
 </div>
 <div class="billboard__movies">
-  <app-movie-list [title]="title" [movies]="movies" (movieSelected)="onMovieSelected($event)" />
+  <app-movie-list *ngIf="!favorites" [title]="title" (setFavorite)="onSetFavorite($event)" [movies]="movies" (movieSelected)="onMovieSelected($event)" />
+  <app-movie-list *ngIf="favorites" [title]="'My Favorites Movies'" (setFavorite)="onSetFavorite($event)" [movies]="favoriteMovies" (movieSelected)="onMovieSelected($event)" />
 </div>
 

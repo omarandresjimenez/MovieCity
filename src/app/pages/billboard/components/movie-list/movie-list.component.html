@@ -5,7 +5,7 @@
     </p>
     <div class='list__cards'>
       <ng-container *ngFor="let movie of movies">
-        <app-movie [movie]="movie" (movieSelected)="onMovieSelected(movie)"/>
+        <app-movie [movie]="movie" (setFavorite)="onSetFavorite($event)" (movieSelected)="onMovieSelected(movie)"/>
       </ng-container>
     </div>
   </div>

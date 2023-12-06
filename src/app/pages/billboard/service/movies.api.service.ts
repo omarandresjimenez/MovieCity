@@ -23,9 +23,30 @@ export class MovieApiService {
       .pipe(catchError(this.handleError<Movie[]>('getMovies', [])));
   }
 
-  getFavoriteMovies(): Observable<Movie[]> {
-    const movies = localStorage.getItem('favoriteMovies');
-    return of(movies ? JSON.parse(movies) : []);
+  getFavoriteMovies(): Observable<string[]> {
+    const moviesIds = localStorage.getItem('favoriteMovies');
+    return of(moviesIds ? JSON.parse(moviesIds) : []);
+  }
+
+  addMovieToFavorites(movieId: string): Observable<string[]> {
+    const movieStore = localStorage.getItem('favoriteMovies');
+    const movies = movieStore ? JSON.parse(movieStore) : [];
+    if (!movies.find((m: string) => m === movieId)) {
+      movies.push(movieId);
+      localStorage.setItem('favoriteMovies', JSON.stringify(movies));
+    }
+    return of(movies);
+  }
+
+  removeMovieFromFavorites(movieId: string): Observable<string[]> {
+    const movieStore = localStorage.getItem('favoriteMovies');
+    const movies = movieStore ? JSON.parse(movieStore) : [];
+    const index = movies.findIndex((m: string) => m === movieId);
+    if (index > -1) {
+      movies.splice(index, 1);
+      localStorage.setItem('favoriteMovies', JSON.stringify(movies));
+    }
+    return of(movies);
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

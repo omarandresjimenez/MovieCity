@@ -1,13 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  inject,
-  DestroyRef,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, Input, inject, DestroyRef } from '@angular/core';
+import { Observable, combineLatest, forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Movie } from '../../models/Movie';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +8,7 @@ import { PlayButtonComponent } from '../../share/play-button/play-button.compone
 import { MovieCatalogService } from './service/movies.service';
 import { CommonModule } from '@angular/common';
 import { MovieListComponent } from './components/movie-list/movie-list.component';
+import { MovieFavorite } from '../../models/types';
 
 @Component({
   selector: 'app-billboard',
@@ -29,14 +22,16 @@ import { MovieListComponent } from './components/movie-list/movie-list.component
     MovieListComponent,
   ],
 })
-export class BillboardComponent implements OnInit, OnChanges {
+export class BillboardComponent implements OnInit {
   constructor(private movieService: MovieCatalogService) {}
   movies: Movie[] = [];
+  favoriteMovies: Movie[] = [];
   movie: Movie | null = null;
   faInfoIcon = faCircleInfo;
   title: string = 'Popular Movies';
   movies$: Observable<Movie[]> = this.movieService.movieCatalog$;
   movie$: Observable<Movie | null> = this.movieService.randomMovie$;
+  favitesMovies$: Observable<Movie[]> = this.movieService.favorites$;
 
   private destroyRef = inject(DestroyRef);
 
@@ -44,28 +39,16 @@ export class BillboardComponent implements OnInit, OnChanges {
   @Input('search') search?: string = '';
 
   ngOnInit(): void {
+    this.movieService.getFavoriteMovies();
     this.movieService.getRandomMovie();
-    this.movies$
+    this.movieService.searchMovies('');
+    combineLatest([this.favitesMovies$, this.movies$, this.movie$])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((movies) => {
+      .subscribe(([favorites, movies, movie]) => {
         this.movies = movies;
-      });
-    this.movie$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((movie: Movie | null) => {
         this.movie = movie;
+        this.favoriteMovies = favorites;
       });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['favorites'] && this.favorites) {
-      this.movieService.setFavoriteMovies();
-      this.title = 'My List of favorites';
-    }
-
-    if (!this.favorites && !this.search) {
-      this.movieService.searchMovies('');
-    }
   }
 
   handleOpenModal() {
@@ -74,5 +57,14 @@ export class BillboardComponent implements OnInit, OnChanges {
 
   onMovieSelected(movie: Movie): void {
     this.movie = movie;
+  }
+
+  onSetFavorite(event: MovieFavorite): void {
+    if (event.favorite) {
+      this.movieService.addMovieToFavorites(event.movieId);
+    } else {
+      this.movieService.removeMovieFromFavorites(event.movieId);
+    }
+    // this.movieService.getFavoriteMovies();
   }
 }

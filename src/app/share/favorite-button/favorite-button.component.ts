@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faEmptyHeart } from '@fortawesome/free-regular-svg-icons';
+import { MovieFavorite } from '../../models/types';
+import { Movie } from '../../models/Movie';
 
 @Component({
   selector: 'app-favorite-button',
@@ -10,15 +12,27 @@ import { faHeart as faEmptyHeart } from '@fortawesome/free-regular-svg-icons';
   templateUrl: './favorite-button.component.html',
   styleUrl: './favorite-button.component.scss',
 })
-export class FavoriteButtonComponent {
+export class FavoriteButtonComponent implements OnInit {
   @Input({ required: true })
-  movieId!: string;
+  movie!: Movie;
 
-  isFavorite: boolean = false;
+  @Output()
+  setFavorite = new EventEmitter<MovieFavorite>();
+  favIcon = faEmptyHeart;
 
-  favIcon = this.isFavorite ? faHeart : faEmptyHeart;
+  ngOnInit(): void {
+    this.setFavIcon();
+  }
 
   toggleFavorites() {
-    console.log('Favorite button clicked');
+    this.setFavorite.emit({
+      favorite: !this.movie.isFavorite,
+      movieId: this.movie.id,
+    });
+    this.setFavIcon();
+  }
+
+  private setFavIcon() {
+    this.favIcon = this.movie.isFavorite ? faHeart : faEmptyHeart;
   }
 }
