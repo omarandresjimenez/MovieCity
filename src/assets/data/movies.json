@@ -7,7 +7,7 @@
     "poster": "https://i.pinimg.com/originals/f4/1e/e3/f41ee3f0104102327bac885636ab10ae.jpg",
     "genre": "Comedy",
     "duration": "10 minutes",
-    "ranking": 8.1
+    "rating": 8.1
   },
   {
     "id": "SAKOMSNHTYS2",
@@ -17,7 +17,7 @@
     "poster": "http://uhdtv.io/wp-content/uploads/2020/10/Sintel-3.jpg",
     "genre": "Adventure",
     "duration": "15 minutes",
-    "ranking": 8.4
+    "rating": 8.4
   },
   {
     "id": "SAKOMSNHTYS3",
@@ -27,7 +27,7 @@
     "poster": "https://mango.blender.org/wp-content/uploads/2013/05/01_thom_celia_bridge.jpg",
     "genre": "Action",
     "duration": "12 minutes",
-    "ranking": 8.9
+    "rating": 8.9
   },
   {
     "id": "SAKOMSNHTYS4",
@@ -37,6 +37,6 @@
     "poster": "https://download.blender.org/ED/cover.jpg",
     "genre": "Sci-Fi",
     "duration": "15 minutes",
-    "ranking": 8.2
+    "rating": 8.2
   }
 ]

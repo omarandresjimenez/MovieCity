@@ -9,6 +9,7 @@ import { MovieCatalogService } from './service/movies.service';
 import { CommonModule } from '@angular/common';
 import { MovieListComponent } from './components/movie-list/movie-list.component';
 import { MovieFavorite } from '../../models/types';
+import { InfoModalComponent } from './components/info-modal/info-modal.component';
 
 @Component({
   selector: 'app-billboard',
@@ -20,6 +21,7 @@ import { MovieFavorite } from '../../models/types';
     PlayButtonComponent,
     CommonModule,
     MovieListComponent,
+    InfoModalComponent,
   ],
 })
 export class BillboardComponent implements OnInit {
@@ -28,7 +30,8 @@ export class BillboardComponent implements OnInit {
   favoriteMovies: Movie[] = [];
   movie: Movie | null = null;
   faInfoIcon = faCircleInfo;
-  title: string = 'Popular Movies';
+  title = 'Popular Movies';
+  showModal = false;
   movies$: Observable<Movie[]> = this.movieService.movieCatalog$;
   movie$: Observable<Movie | null> = this.movieService.randomMovie$;
   favitesMovies$: Observable<Movie[]> = this.movieService.favorites$;
@@ -42,17 +45,16 @@ export class BillboardComponent implements OnInit {
     this.movieService.getFavoriteMovies();
     this.movieService.getRandomMovie();
     this.movieService.searchMovies('');
-    combineLatest([this.favitesMovies$, this.movies$, this.movie$])
+    combineLatest([this.favitesMovies$, this.movies$])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([favorites, movies, movie]) => {
+      .subscribe(([favorites, movies]) => {
         this.movies = movies;
-        this.movie = movie;
         this.favoriteMovies = favorites;
       });
   }
 
-  handleOpenModal() {
-    console.log('Open modal');
+  handleOpenModal(close: boolean) {
+    this.showModal = close;
   }
 
   onMovieSelected(movie: Movie): void {

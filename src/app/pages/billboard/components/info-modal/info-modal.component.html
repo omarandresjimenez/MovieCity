@@ -1,0 +1,41 @@
+<div class="modal__container" *ngIf="isVisible">
+  <div class="main__block">
+    <div class="content__movie"  [ngStyle]="{'transform': isVisible ? 'scale(1)' : 'scale(0)'}">
+
+      <div class="player" *ngIf='movie'>
+        <video [poster]="movie.poster" autoPlay [muted]="true" [loop]="true" [src]="movie.trailerLink" class="player-video" ></video>
+        <div (click)="handleClose()" class="modal__close">
+          <fa-icon class="icon" [icon]="faIcon"></fa-icon>
+        </div>
+        <div class="movie__details">
+          <p class="title">
+            {{movie.title}}
+          </p>
+          <div class="actions">
+            <app-play-button [movieId]="movie.id" class='play__button' />
+            <app-favorite-button [movie]="movie" (setFavorite)="onSetFavorite($event)"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie__description">
+        <div class="panel__info">
+          <p class="release__date">
+            {{movie.rating}}
+          </p>
+          <p class="all-info">
+            {{movie.duration}}
+          </p>
+          <p class="all-info">
+            {{movie.genre}}
+          </p>
+
+        <p class="all-info">
+          {{movie.description}}
+        </p>
+      </div>
+      </div>
+
+    </div>
+  </div>
+</div>

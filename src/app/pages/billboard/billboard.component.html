@@ -1,5 +1,5 @@
 <div class="billboard__container">
-  <ng-container *ngIf='movie'>
+  <ng-container *ngIf='movie || (movie$ | async) as movie'>
   <video [poster]="movie.poster" class="video__container" autoPlay [muted]='true' [loop]='true' [src]="movie.trailerLink"></video>
   <div class="billboard__container-movie__description">
     <p class="movie__title">
@@ -11,7 +11,7 @@
     <div class="movie__controls">
       <app-play-button [movieId]="movie.id" />
       <button
-        (click)="handleOpenModal()"
+        (click)="handleOpenModal(true)"
         class="movie__controls-more__info"
         >
 
@@ -20,6 +20,7 @@
       </button>
     </div>
   </div>
+  <app-info-modal [isVisible]="showModal" [movie]="movie" (setClose)="handleOpenModal(false)" (setFavorite)="onSetFavorite($event)"/>
 </ng-container>
 </div>
 <div class="billboard__movies">
