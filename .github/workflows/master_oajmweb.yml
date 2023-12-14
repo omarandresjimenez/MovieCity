@@ -16,10 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'node|18.17.1'
+      # - name: Set up Node.js version
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 'node|18.17.1'
 
       - name: npm install, build, and test
         run: |
